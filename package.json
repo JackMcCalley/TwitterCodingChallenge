@@ -1,0 +1,11 @@
+{
+  "name": "twitterapichallenge",
+  "version": "1.0.0",
+  "description": "Pulls tweets with #coding in them",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jack McCalley",
+  "license": "ISC"
+}
