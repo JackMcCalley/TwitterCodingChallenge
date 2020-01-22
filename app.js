@@ -1,30 +1,36 @@
 const http = require('http');
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = 3000;
 const fetch = require("node-fetch");
+var Twitter = require('twitter');
+var config = require('./config.js');
 
-const authUrl = "https://api.twitter.com/oauth/authenticate?oauth_token=206055597-JZvayjpUfCgyMdSz3ijCLKa11BeNrf3yyjrWQv4H"
-const auth = async authUrl => {
-    try {
-        const response = await fetch(auth);
-        const json = await response.json();
-        console.log(json);
-    } catch(error) {
-        console.log(error);
-    }
+var T = new Twitter(config);
+var tweetCount = 1;
+
+var params = {
+  q: '#coding',
+  count: tweetCount,
+  result_type: 'recent',
+  lang: 'en'
 }
-auth(authUrl);
-const url = "https://api.twitter.com/1.1/search/tweets.json?q=%23coding&result_type=recent";
-const getData = async url => {
-  try {
-    const response = await fetch(url);
-    const json = await response.json();
-    console.log(json);
-  } catch (error) {
-    console.log(error);
-  }
-};
-getData(url);
+
+// T.get('search/tweets', params, function(err, tweets, response) {
+//   if(!err){
+//     console.log(tweets)
+//   } else {
+//     console.log(err);
+//   }
+// })
+
+var stream = T.stream('statuses/filter', {track: '#coding'});
+stream.on('data', function(event) {
+  console.log(event && event.text);
+})
+
+stream.on('error', function(error) {
+  throw error;
+});
 
 const server = http.createServer((req, res) => {
     res.statusCode = 200;

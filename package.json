@@ -7,5 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jack McCalley",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-twitter": "^1.0.4",
+    "twitter": "^1.7.1"
+  }
 }
