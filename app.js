@@ -1,43 +1,47 @@
 const http = require('http');
-const hostname = 'localhost';
-const port = 3000;
-const fetch = require("node-fetch");
+const dotenv = require('dotenv');
+dotenv.config();
+var fs = require('fs');
+const port = process.env.PORT;
 var Twitter = require('twitter');
 var config = require('./config.js');
 
-var T = new Twitter(config);
-var tweetCount = 1;
+var client = new Twitter(config);
+var tweetCount = 5;
+var search = '#coding'
 
 var params = {
-  q: '#coding',
+  q: search,
   count: tweetCount,
   result_type: 'recent',
   lang: 'en'
 }
 
-// T.get('search/tweets', params, function(err, tweets, response) {
-//   if(!err){
-//     console.log(tweets)
-//   } else {
-//     console.log(err);
-//   }
-// })
+client.get('search/tweets', params, function(error, tweets, callback){
+  if (!error) {
+    statuses = tweets.statuses
 
-var stream = T.stream('statuses/filter', {track: '#coding'});
-stream.on('data', function(event) {
-  console.log(event && event.text);
-})
+    var codeTweets = []
+    var codeTweet;
+    
+    for (i = 0; i < statuses.length; i++){
+      codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
+        text: statuses[i].text, created: statuses[i].created_at, 
+        link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
+      codeTweets.push(codeTweet);
+    }
+  }
 
-stream.on('error', function(error) {
-  throw error;
+  for(i=0; i< codeTweets.length; i++){
+    console.log(JSON.stringify(codeTweets[i]))
+  }
+  return codeTweets;
 });
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Twitter API Test');
+http.createServer((req, res) => {
+  fs.readFile('index.html', function (err, data) {
+      res.writeHead(200, { 'Content-Type': 'text/html', 'Content-Length': data.length });
+      res.write(data);
+      res.end();
   });
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+}).listen(port);
