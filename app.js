@@ -44,8 +44,8 @@ var searchForm = function(){
   '<label for="search_field">Search Tweets: </label><input id="search" ' + 
   'type="text" name="search_field" value="#coding"> ' + 
   '<label for="tweetNum">Number of Tweets: </label><input id="tweetNum" ' + 
-  'type="number" name="tweet_number" min="1" max="2500 value="250"> ' +
-  '<input type="submit" value="OK">' + 
+  'type="number" name="tweet_number" min="1" max="2500" value="250"> ' +
+  '<input type="submit" value="Search">' + 
   '</form>'
   return numberForm;
 }
@@ -66,7 +66,8 @@ app.get('/', function(request, response){
     q: "#coding",
     count: tweetCount,
     result_type: 'recent',
-    lang: 'en'
+    lang: 'en',
+    tweet_mode: 'extended'
   }
 
   var codeTweets = []
@@ -79,11 +80,12 @@ app.get('/', function(request, response){
       
       for (i = 0; i < statuses.length; i++){
         codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
-          text: statuses[i].text, created: statuses[i].created_at, 
+          text: statuses[i].full_text, created: statuses[i].created_at, 
           link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
         codeTweets.push(codeTweet);
       }
     }
+    console.log(codeTweets.length)
     response.send(
       '<html><body><meta charset="utf-8"/>' + 
       '<p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + 
@@ -99,7 +101,8 @@ app.post('/search_tweets', function(request, response){
     q: search,
     count: tweetCount,
     result_type: 'recent',
-    lang: 'en'
+    lang: 'en',
+    tweet_mode: 'extended'
   }
 
   codeTweets = []
@@ -112,7 +115,7 @@ app.post('/search_tweets', function(request, response){
       
       for (i = 0; i < statuses.length; i++){
         codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
-          text: statuses[i].text, created: statuses[i].created_at, 
+          text: statuses[i].full_text, created: statuses[i].created_at, 
           link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
         codeTweets.push(codeTweet);
       }
