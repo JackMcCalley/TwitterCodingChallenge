@@ -62,7 +62,9 @@ var parseTweets = function(tweets){
 
 app.get('/', function(request, response){
   response.send(
-    '<html><body><meta charset="utf-8"/><p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + '</p>' + '</body></html>'
+    '<html><body><meta charset="utf-8"/>' + 
+    '<p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + 
+    '</p>' + '</body></html>'
     )
 })
 
