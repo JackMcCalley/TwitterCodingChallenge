@@ -84,14 +84,12 @@ app.get('/', function(request, response){
         codeTweets.push(codeTweet);
       }
     }
-    return codeTweets
+    response.send(
+      '<html><body><meta charset="utf-8"/>' + 
+      '<p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + 
+      '</p>' + '</body></html>'
+      )
   })
-  
-  response.send(
-    '<html><body><meta charset="utf-8"/>' + 
-    '<p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + 
-    '</p>' + '</body></html>'
-    )
 })
 
 app.post('/search_tweets', function(request, response){
@@ -119,13 +117,11 @@ app.post('/search_tweets', function(request, response){
         codeTweets.push(codeTweet);
       }
     }
-    return codeTweets
+    response.send(
+      '<html><body><meta charset="utf-8"/><p>' + searchForm() + 
+      '</p><p>' + parseTweets(codeTweets) + '</p>' + '</body></html>'
+      )
   });
-  
-  response.send(
-    '<html><body><meta charset="utf-8"/><p>' + searchForm() + 
-    '</p><p>' + parseTweets(codeTweets) + '</p>' + '</body></html>'
-    )
 })
 
 app.listen(port,function(){
