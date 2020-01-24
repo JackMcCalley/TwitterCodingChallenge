@@ -13,31 +13,31 @@ app.use(express.urlencoded({
 }))
 
 var client = new Twitter(config);
-var tweetCount = 250;
-var params = {
-  q: "#coding",
-  count: tweetCount,
-  result_type: 'recent',
-  lang: 'en'
-}
+// var tweetCount = 250;
+// var params = {
+//   q: "#coding",
+//   count: tweetCount,
+//   result_type: 'recent',
+//   lang: 'en'
+// }
 
-var codeTweets = []
+// var codeTweets = []
 
-client.get('search/tweets', params, function(error, tweets, callback){
-  if (!error) {
-    statuses = tweets.statuses
+// client.get('search/tweets', params, function(error, tweets, callback){
+//   if (!error) {
+//     statuses = tweets.statuses
 
-    var codeTweet;
+//     var codeTweet;
     
-    for (i = 0; i < statuses.length; i++){
-      codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
-        text: statuses[i].text, created: statuses[i].created_at, 
-        link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
-      codeTweets.push(codeTweet);
-    }
-  }
-  return codeTweets
-});
+//     for (i = 0; i < statuses.length; i++){
+//       codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
+//         text: statuses[i].text, created: statuses[i].created_at, 
+//         link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
+//       codeTweets.push(codeTweet);
+//     }
+//   }
+//   return codeTweets
+// });
 
 var searchForm = function(){
   var numberForm = '<form action="/search_tweets" method="post">' + 
@@ -61,6 +61,32 @@ var parseTweets = function(tweets){
 }
 
 app.get('/', function(request, response){
+  var tweetCount = 250;
+  var params = {
+    q: "#coding",
+    count: tweetCount,
+    result_type: 'recent',
+    lang: 'en'
+  }
+
+  var codeTweets = []
+
+  client.get('search/tweets', params, function(error, tweets, callback){
+    if (!error) {
+      statuses = tweets.statuses
+
+      var codeTweet;
+      
+      for (i = 0; i < statuses.length; i++){
+        codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
+          text: statuses[i].text, created: statuses[i].created_at, 
+          link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
+        codeTweets.push(codeTweet);
+      }
+    }
+    return codeTweets
+  })
+  
   response.send(
     '<html><body><meta charset="utf-8"/>' + 
     '<p>' + searchForm() + '</p><p>' + parseTweets(codeTweets) + 
@@ -77,6 +103,25 @@ app.post('/search_tweets', function(request, response){
     result_type: 'recent',
     lang: 'en'
   }
+
+  codeTweets = []
+
+  client.get('search/tweets', params, function(error, tweets, callback){
+    if (!error) {
+      statuses = tweets.statuses
+      
+      var codeTweet;
+      
+      for (i = 0; i < statuses.length; i++){
+        codeTweet = {name: statuses[i].user.name, username: statuses[i].user.screen_name, 
+          text: statuses[i].text, created: statuses[i].created_at, 
+          link: "https://twitter.com/" + statuses[i].user.screen_name + "/status/" + statuses[i].id_str}
+        codeTweets.push(codeTweet);
+      }
+    }
+    return codeTweets
+  });
+  
   response.send(
     '<html><body><meta charset="utf-8"/><p>' + searchForm() + 
     '</p><p>' + parseTweets(codeTweets) + '</p>' + '</body></html>'
